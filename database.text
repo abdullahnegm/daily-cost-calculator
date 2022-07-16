@@ -1,0 +1,9 @@
+select if( no_of_orders < 3, no_of_orders, 3) as orders , years, sum(cost)
+from
+(
+	select customer_id, sum(cost) as cost, count(customer_id) as no_of_orders,
+	if( TIMESTAMPDIFF(YEAR, max(date), NOW()) < 3, TIMESTAMPDIFF(YEAR, max(date), NOW()), 3 ) as years
+	from orders
+	group by customer_id
+) as T1
+group by orders, years
